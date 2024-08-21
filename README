@@ -1,0 +1,7 @@
+# Go - api
+Learning some go
+
+## Run
+
+git clone https://github.com/croko22/go-api.git
+make run
