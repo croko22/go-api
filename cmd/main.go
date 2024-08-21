@@ -1,10 +1,44 @@
 package main
 
-import "github.com/croko22/go-api/cmd/api"
+import (
+	"database/sql"
+	"log"
+
+	"github.com/croko22/go-api/cmd/api"
+	"github.com/croko22/go-api/config"
+	"github.com/croko22/go-api/db"
+	"github.com/go-sql-driver/mysql"
+)
 
 func main() {
-	server := api.NewAPIServer(":8080", nil)
+	cfg := mysql.Config{
+		User:                 config.Envs.DBUser,
+		Passwd:               config.Envs.DBPassword,
+		Addr:                 config.Envs.DBAddress,
+		DBName:               config.Envs.DBName,
+		Net:                  "tcp",
+		AllowNativePasswords: true,
+		ParseTime:            true,
+	}
+
+	db, err := db.NewMySQLStorage(cfg)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	initStorage(db)
+
+	server := api.NewAPIServer(":8080", db)
 	if err := server.Run(); err != nil {
 		panic(err)
 	}
+}
+
+func initStorage(db *sql.DB) {
+	err := db.Ping()
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	log.Println("Connected to database")
 }
