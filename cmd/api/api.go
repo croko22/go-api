@@ -5,6 +5,9 @@ import (
 	"log"
 	"net/http"
 
+	"github.com/croko22/go-api/service/cart"
+	"github.com/croko22/go-api/service/order"
+	"github.com/croko22/go-api/service/product"
 	"github.com/croko22/go-api/service/user"
 
 	"github.com/gorilla/mux"
@@ -29,6 +32,17 @@ func (s *APIServer) Run() error {
 	userStore := user.NewStore(s.db)
 	userHandler := user.NewHandler(userStore)
 	userHandler.RegisterRoutes(subrouter)
+
+	productStore := product.NewStore(s.db)
+	productHandler := product.NewHandler(productStore, userStore)
+	productHandler.RegisterRoutes(subrouter)
+
+	orderStore := order.NewStore(s.db)
+
+	cartHandler := cart.NewHandler(productStore, orderStore, userStore)
+	cartHandler.RegisterRoutes(subrouter)
+
+	router.PathPrefix("/").Handler(http.FileServer(http.Dir("static")))
 
 	log.Println("Starting server on", s.addr)
 
