@@ -5,6 +5,7 @@ import (
 	"net/http"
 	"strconv"
 
+	"github.com/croko22/go-api/service/auth"
 	"github.com/croko22/go-api/types"
 	"github.com/croko22/go-api/utils"
 	"github.com/go-playground/validator/v10"
@@ -25,7 +26,7 @@ func (h *Handler) RegisterRoutes(router *mux.Router) {
 	router.HandleFunc("/products/{productID}", h.handleGetProduct).Methods(http.MethodGet)
 
 	// admin routes
-	// router.HandleFunc("/products", auth.WithJWTAuth(h.handleCreateProduct, h.userStore)).Methods(http.MethodPost)
+	router.HandleFunc("/products", auth.WithJWTAuth(h.handleCreateProduct, h.userStore)).Methods(http.MethodPost)
 }
 
 func (h *Handler) handleGetProducts(w http.ResponseWriter, r *http.Request) {

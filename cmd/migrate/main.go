@@ -4,7 +4,7 @@ import (
 	"log"
 	"os"
 
-	"github.com/croko22/go-api/config"
+	configs "github.com/croko22/go-api/config"
 	"github.com/croko22/go-api/db"
 	mysqlDriver "github.com/go-sql-driver/mysql"
 	"github.com/golang-migrate/migrate/v4"
@@ -14,10 +14,10 @@ import (
 
 func main() {
 	cfg := mysqlDriver.Config{
-		User:                 config.Envs.DBUser,
-		Passwd:               config.Envs.DBPassword,
-		Addr:                 config.Envs.DBAddress,
-		DBName:               config.Envs.DBName,
+		User:                 configs.Envs.DBUser,
+		Passwd:               configs.Envs.DBPassword,
+		Addr:                 configs.Envs.DBAddress,
+		DBName:               configs.Envs.DBName,
 		Net:                  "tcp",
 		AllowNativePasswords: true,
 		ParseTime:            true,
